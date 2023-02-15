@@ -3,15 +3,15 @@ package controller
 import (
 	"net/http"
 
+	"github.com/asaskevich/govalidator"
 	"github.com/gin-gonic/gin"
 	"github.com/sut65/team11/entity"
-	"github.com/asaskevich/govalidator"
 )
 
-type extendedCustomer struct {
-	entity.ORDER
-	Name string
-}
+// type extendedCustomer struct {
+// 	entity.ORDER
+// 	Name string
+// }
 
 // POST CASE
 func CreateCASE(c *gin.Context) {
@@ -167,9 +167,9 @@ func GetListOrder(c *gin.Context) {
 
 // GET /Order:id
 func GetOrder(c *gin.Context) {
-	var order extendedCustomer
+	var order []entity.ORDER
 	id := c.Param("id")
-	if err := entity.DB().Raw("SELECT o.*, c.name FROM orders o JOIN customers c ON o.customer_id = c.id WHERE o.id = ?", id).Scan(&order).Error; err != nil {
+	if err := entity.DB().Preload("Customer").Preload("Device").Preload("Address").Preload("CASE").Preload("State").Raw("SELECT * FROM orders WHERE customer_id = ?", id).Find(&order).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}

@@ -19,9 +19,10 @@ import { CASEInterface, ORDERInterface } from "../../interfaces/ORDERUI";
 import Swal from 'sweetalert2'
 
 function OrderShow() {
+    const customerID = parseInt(localStorage.getItem("uid") + "");
     const [OrderShow, setOrderShow] = React.useState<ORDERInterface[]>([]);
     const getOrderShow = async () => {
-        const apiUrl = `http://localhost:8080/GetListOrder`;
+        const apiUrl = `http://localhost:8080/GetOrder/${customerID}`;
         const requestOptions = {
             method: "GET",
             headers: { "Content-Type": "application/json" },
@@ -30,6 +31,7 @@ function OrderShow() {
             .then((response) => response.json())
             .then((res) => {
             if (res.data) {
+                console.log(res.data)
                 setOrderShow(res.data);
             } else {
                 console.log("order show error");

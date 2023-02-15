@@ -133,7 +133,7 @@ function OrderCreate() {
         StateID: 1,
         DeviceID: convertType(Device_ID),
         AddressID: convertType(Address_ID),
-        CustomerID: 1,
+        CustomerID: convertType(userID),
         Date_time: Date_time,
         Reason: Reason,
         Limits: typeof Limits == "string" ? parseInt(Limits) : 0,
